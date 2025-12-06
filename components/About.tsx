@@ -2,18 +2,8 @@ import Image from "next/image";
 
 export default function About() {
   return (
-    <section id="about" className="relative bg-brand-soft scroll-mt-20">
-      {/* decorative virus behind */}
-      <Image
-        src="/path1470-6.png"
-        alt=""
-        aria-hidden
-        width={300}
-        height={300}
-        className="pointer-events-none absolute bottom-0 right-0 z-0 h-[200px] w-[100px] select-none"
-      />
-
-      <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-10 px-4  md:grid-cols-2 ">
+    <section id="about" className="relative bg-brand-soft scroll-mt-16">
+      <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-10 px-4 md:grid-cols-2 ">
         {/* TEXT (first on mobile) */}
         <div className="order-1 md:order-2">
           <p className="text-xl font-extrabold text-brand-accent tracking-wide">
@@ -38,16 +28,25 @@ export default function About() {
         </div>
 
         {/* IMAGE (after text on mobile, left on desktop) */}
-        <div className="order-2 md:order-1">
+        <div className="order-2 md:order-1 z-10 ">
           <Image
             src="/Group 15404.png"
             alt="Coronavirus illustration"
             width={720}
             height={540}
-            className="mx-auto h-auto w-full max-w-[520px] md:max-w-none md:-translate-x-10"
+            className="mx-auto h-auto w-full max-w-[520px] md:max-w-none md:-translate-x-10 "
           />
         </div>
       </div>
+      {/* decorative virus behind */}
+      <Image
+        src="/path1470-6.png"
+        alt=""
+        aria-hidden
+        width={300}
+        height={300}
+        className="z-0 pointer-events-none absolute bottom-0 right-0 h-[200px] w-[100px] select-none"
+      />
     </section>
   );
 }

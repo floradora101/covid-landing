@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Symptoms() {
   return (
-    <section id="symptoms" className="bg-brand-soft">
+    <section id="symptoms" className="bg-brand-soft scroll-mt-3">
       <div className="mx-auto max-w-6xl px-4 text-center py-14 ">
         <p className="text-xl font-extrabold text-brand-accent  ">Covid-19</p>
         <h2 className="mt-3 font-redhat text-5xl font-extrabold text-brand-teal leading-tight">

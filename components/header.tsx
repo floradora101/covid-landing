@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 const nav = [
   { label: "Overview", href: "#overview" },
@@ -11,54 +11,63 @@ const nav = [
   { label: "Prevention", href: "#prevention" },
 ];
 
+const HEADER_OFFSET = 90; 
+
 export default function Header() {
-  const ids = useMemo(() => nav.map((n) => n.href.slice(1)), []);
   const [activeHref, setActiveHref] = useState("#overview");
+  const sectionElsRef = useRef<HTMLElement[]>([]);
+  const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const sections = ids
-      .map((id) => document.getElementById(id))
+    // collect sections once on mount
+    const els = nav
+      .map((n) => document.getElementById(n.href.slice(1)))
       .filter(Boolean) as HTMLElement[];
 
-    if (!sections.length) return;
+    sectionElsRef.current = els;
+    if (!els.length) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // take the most visible section
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort(
-            (a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0)
-          )[0];
+    const updateActive = () => {
+      const y = window.scrollY + HEADER_OFFSET;
 
-        if (visible?.target?.id) setActiveHref(`#${visible.target.id}`);
-      },
-      {
-        // header is sticky (64px)
-        root: null,
-        rootMargin: "-80px 0px -55% 0px",
-        threshold: [0.15, 0.25, 0.5, 0.75],
+      // pick the last section whose top is above current scroll position
+      let current = els[0];
+      for (const s of els) {
+        if (s.offsetTop <= y) current = s;
       }
-    );
 
-    sections.forEach((s) => observer.observe(s));
-    return () => observer.disconnect();
-  }, [ids]);
+      setActiveHref(`#${current.id}`);
+    };
+
+    const onScrollOrResize = () => {
+      if (rafRef.current) return;
+      rafRef.current = window.requestAnimationFrame(() => {
+        rafRef.current = null;
+        updateActive();
+      });
+    };
+
+    updateActive(); // initial
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+
+    return () => {
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 h-16 bg-brand-soft/80 backdrop-blur">
       <div className="mx-auto flex h-full max-w-6xl items-center px-4">
-        {/* Logo */}
         <Link href="#overview" className="flex items-center pt-5">
           <Image
             src="/Logo.png"
             alt="COVID-19"
-            // width={200}
-            // height={70}
-            priority
-            // className="h-[55px] w-[175px]"
             width={160}
             height={50}
+            priority
             className="h-[45px] w-auto"
           />
         </Link>
@@ -73,12 +82,12 @@ export default function Header() {
                   key={i.href}
                   href={i.href}
                   onClick={() => setActiveHref(i.href)}
+                  aria-current={isActive ? "page" : undefined}
                   className={[
                     "relative text-sm font-medium transition-colors",
                     isActive
                       ? "text-brand-accent"
                       : "text-slate-600 hover:text-brand-accent",
-                    // dot base (exists always, only opacity changes => no layout shift)
                     "after:absolute after:left-1/2 after:top-[calc(100%+8px)] after:h-[6px] after:w-[6px] after:-translate-x-1/2 after:rounded-full after:bg-brand-accent after:opacity-0 after:transition-opacity",
                     "hover:after:opacity-100",
                     isActive ? "after:opacity-100" : "",

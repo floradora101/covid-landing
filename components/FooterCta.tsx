@@ -57,17 +57,12 @@ export default function FooterCta() {
               className="min-w-0 flex-1 bg-transparent px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none"
             />
 
-<button
+            <button
               type="submit"
               className=" md:py-4 rounded-full px-11 py-4  bg-brand-accent text-sm font-bold shadow-soft text-white hover:opacity-95 sm:w-auto sm:"
             >
               Send
             </button>
-
-
-
-
-
           </div>
         </form>
 
