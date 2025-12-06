@@ -4,6 +4,25 @@
   --background: #ffffff;
   --foreground: #171717;
 }
+@theme {
+  /* COLORS (creates utilities like text-body, bg-brand-soft, etc.) */
+  --color-body: #4b4f51;
+  --color-brand-accent: #fb4c47;
+  --color-brand-teal: #0a5545;
+  --color-brand-soft: #fff8f8;
+
+  /* FONTS (creates utility font-body) */
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-redhat: var(--font-redhat), ui-sans-serif, system-ui, sans-serif;
+}
+@utility bg-hero-gradient {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) -29.64%,
+    #fff8f8 45.66%,
+    #b57474 100%
+  );
+}
 
 @theme inline {
   --color-background: var(--background);
